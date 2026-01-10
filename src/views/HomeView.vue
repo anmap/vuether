@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import type { MapboxFeature } from '@/types/mapbox';
 
 const apiKey = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
 
+const router = useRouter();
 const searchQuery = ref('');
 const queryTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
 const mapboxSearchResults = ref<MapboxFeature[]>([]);
@@ -29,6 +31,19 @@ const getSearchResults = () => {
     mapboxSearchResults.value = [];
   }, 300);
 }
+
+const handleSelectResult = (result: MapboxFeature) => {
+  const [city, state] = result.properties.full_address.split(',');
+  router.push({
+    name: 'city',
+    params: { state: state?.trim() ?? '', city: city?.trim() ?? '' },
+    query: {
+      lat: result.geometry.coordinates[1].toString(),
+      lng: result.geometry.coordinates[0].toString(),
+      preview: 'true',
+    },
+  });
+}
 </script>
 
 <template>
@@ -45,7 +60,8 @@ const getSearchResults = () => {
           No results match for your search.
         </p>
         <template v-else>
-          <li v-for="result in mapboxSearchResults" :key="result.id" class="p-2 cursor-pointer">
+          <li v-for="result in mapboxSearchResults" :key="result.id" class="p-2 cursor-pointer"
+            @click="handleSelectResult(result)">
             {{ result.properties.full_address }}
           </li>
         </template>
