@@ -9,14 +9,6 @@
   --breakpoint-md: 768px;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  font-weight: normal;
-}
-
 /* Container utility */
 @utility container {
   margin-inline: auto;
