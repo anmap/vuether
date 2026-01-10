@@ -1,7 +1,6 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <main>
+  <main>Nguyen Duc An
   </main>
 </template>
