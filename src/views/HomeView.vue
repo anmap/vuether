@@ -7,20 +7,26 @@ const apiKey = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
 
 const searchQuery = ref('');
 const queryTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
-const mapboxSearchResults = ref<MapboxFeature[] | null>(null);
+const mapboxSearchResults = ref<MapboxFeature[]>([]);
+const searchError = ref(false);
 
 const getSearchResults = () => {
   if (queryTimeout.value !== null) {
     clearTimeout(queryTimeout.value);
   }
   queryTimeout.value = setTimeout(async () => {
+    searchError.value = false;
     if (searchQuery.value !== '') {
-      const res = await axios.get(`https://api.mapbox.com/search/geocode/v6/forward?q=${searchQuery.value}&types=place&access_token=${apiKey}`);
-      mapboxSearchResults.value = res.data.features;
-      console.log(mapboxSearchResults.value);
-      return;
+      try {
+        const res = await axios.get(`https://api.mapbox.com/search/geocode/v6/forward?q=${searchQuery.value}&types=place&access_token=${apiKey}`);
+        mapboxSearchResults.value = res.data.features;
+        return;
+      } catch (error) {
+        console.error(error);
+        searchError.value = true;
+      }
     }
-    mapboxSearchResults.value = null;
+    mapboxSearchResults.value = [];
   }, 300);
 }
 </script>
@@ -30,10 +36,19 @@ const getSearchResults = () => {
     <div class="relative pt-4 mb-8">
       <input type="text" v-model="searchQuery" @input="getSearchResults" placeholder="Search for a city or state"
         class="py-2 px-1 w-full bg-transparent border-b focus:border-weather-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71]" />
-      <ul class="absolute bg-weather-secondary text-white w-full shadow-md py-2 px-1 top-[66px]">
-        <li v-for="result in mapboxSearchResults" :key="result.id" class="p-2 cursor-pointer">
-          {{ result.properties.full_address }}
-        </li>
+      <ul v-if="searchQuery !== ''"
+        class="absolute bg-weather-secondary text-white w-full shadow-md py-2 px-1 top-[66px]">
+        <p v-if="searchError" class="text-red-500 p-2">
+          Sorry, something went wrong. Please try again.
+        </p>
+        <p v-if="!searchError && mapboxSearchResults.length === 0" class="p-2">
+          No results match for your search.
+        </p>
+        <template v-else>
+          <li v-for="result in mapboxSearchResults" :key="result.id" class="p-2 cursor-pointer">
+            {{ result.properties.full_address }}
+          </li>
+        </template>
       </ul>
     </div>
   </main>
