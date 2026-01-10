@@ -3,6 +3,10 @@
 @theme {
   --color-weather-primary: #00668A;
   --color-weather-secondary: #004E71;
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
 }
 
 /* color palette from <https://github.com/vuejs/theme> */
@@ -67,15 +71,8 @@
 
 /* Container utility */
 @utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
-  center: true;
-  @media (width >= --theme(--breakpoint-sm)) {
-    max-width: none;
-  }
-  @media (width >= 1400px) {
-    max-width: 1400px;
-  }
+  margin-inline: auto; /* center: true */
+  padding: 2rem;
 }
 
 body {
@@ -103,4 +100,8 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  .container {
+    @apply container;
+  }
 }
