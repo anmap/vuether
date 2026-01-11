@@ -64,7 +64,7 @@ console.log(weatherData);
     <!-- Hourly Weather -->
     <div class="max-w-screen-md w-full py-12">
       <div class="mx-8 text-white">
-        <h2 class="mb-4">Hourly Weather</h2>
+        <h2 class="mb-4 font-bold uppercase">Hourly Weather</h2>
         <div class="flex gap-10 overflow-x-scroll">
           <div v-for="hour in weatherData?.hourly" :key="hour.dt" class="min-w-12 flex flex-col gap-4 items-center">
             <p class="whitespace-nowrap text-md">
@@ -83,7 +83,7 @@ console.log(weatherData);
     <!-- Weekly Weather -->
     <div class="max-w-screen-md w-full py-12">
       <div class="mx-8 text-white">
-        <h2 class="mb-4">7-Day Forecast</h2>
+        <h2 class="mb-4 font-bold uppercase">7-Day Forecast</h2>
         <div v-for="day in weatherData?.daily" :key="day.dt" class="min-w-12 flex gap-4 items-center justify-between">
           <p class="flex-1">
             {{ formatFullDate(day.dt * 1000) }}
