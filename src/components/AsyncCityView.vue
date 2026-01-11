@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { OpenWeatherMapResult } from '@/types/openweathermap';
 import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { timestampToDate, formatFullDate, formatShortTime, formatHour } from '@/utils/datetime';
 import { formatTemperature } from '@/utils/temperature';
+import type { SavedCity } from '@/types/savedCity';
 
 const apiKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY as string;
 
@@ -32,7 +33,14 @@ const getWeatherData = async () => {
 }
 
 const weatherData = await getWeatherData();
-console.log(weatherData);
+
+const router = useRouter();
+const removeCity = () => {
+  const cities = JSON.parse(localStorage.getItem('savedCities') || '[]');
+  const updatedCities = cities.filter((city: SavedCity) => city.id !== route.query.id);
+  localStorage.setItem('savedCities', JSON.stringify(updatedCities));
+  router.push({ name: 'home' });
+}
 </script>
 
 <template>
@@ -98,6 +106,13 @@ console.log(weatherData);
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Remove from saved cities -->
+    <div class="flex items-center gap-2 py-12 text-white cursor-pointer duration-150 hover:text-red-500"
+      @click="removeCity">
+      <i class="fa-solid fa-trash"></i>
+      <p>Remove City</p>
     </div>
   </div>
 </template>

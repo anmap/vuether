@@ -15,7 +15,6 @@ const getSavedCities = async () => {
     try {
       const raw = localStorage.getItem('savedCities');
       savedCities.value = raw ? JSON.parse(raw) as SavedCity[] : [];
-      console.log(savedCities.value);
     }
     catch (e) {
       console.error('Failed to parse savedCities from localStorage', e);
@@ -42,11 +41,11 @@ const getSavedCities = async () => {
 await getSavedCities();
 
 const goToCityView = (chosenCity: SavedCity) => {
-  const { state, city, coords: { lat, lng } } = chosenCity;
+  const { id, state, city, coords: { lat, lng } } = chosenCity;
   router.push({
     name: 'city',
     params: { state, city },
-    query: { lat, lng },
+    query: { id, lat, lng },
   });
 }
 </script>

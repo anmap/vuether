@@ -25,7 +25,7 @@ const addCity = () => {
     }
   }
 
-  savedCities.value.push({
+  const cityObj = {
     id: uid(),
     state: route.params.state,
     city: route.params.city,
@@ -33,11 +33,14 @@ const addCity = () => {
       lat: route.query.lat,
       lng: route.query.lng,
     },
-  });
+  }
+
+  savedCities.value.push(cityObj);
   localStorage.setItem('savedCities', JSON.stringify(savedCities.value));
 
   const query = Object.assign({}, route.query);
   delete query.preview;
+  query.id = cityObj.id;
   router.replace({ query });
 }
 </script>
