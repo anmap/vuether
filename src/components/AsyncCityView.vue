@@ -2,6 +2,8 @@
 import type { OpenWeatherMapResult } from '@/types/openweathermap';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import { timestampToDate, formatFullDate, formatShortTime, formatHour } from '@/utils/datetime';
+import { formatTemperature } from '@/utils/temperature';
 
 const apiKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY as string;
 
@@ -13,15 +15,14 @@ const getWeatherData = async () => {
 
     const weatherData = response.data as OpenWeatherMapResult;
 
-    // Calculate current data and time
-    const localOffset = new Date().getTimezoneOffset() * 6000;
-    const utc = weatherData.current.dt * 1000 + localOffset;
-    weatherData.currentTime = new Date(utc).toLocaleString();
+    // Calculate current data and time (store as timestamp in milliseconds)
+    const currentDate = timestampToDate(weatherData.current.dt, weatherData.timezone_offset);
+    weatherData.currentTime = currentDate.getTime().toString();
 
-    // Calculate hourly weather offset
+    // Calculate hourly weather offset (store as timestamp in milliseconds)
     weatherData.hourly.forEach((hour) => {
-      const utc = hour.dt * 1000 + localOffset;
-      hour.currentTime = utc + 1000 * weatherData.timezone_offset;
+      const hourDate = timestampToDate(hour.dt, weatherData.timezone_offset);
+      hour.currentTime = hourDate.getTime();
     });
 
     return weatherData;
@@ -46,22 +47,12 @@ console.log(weatherData);
     <div class="flex flex-col items-center text-white py-12">
       <h1 class="text-4xl mb-2">{{ route.params.city }}</h1>
       <p class="text-sm mb-12">
-        {{ weatherData?.currentTime && new Date(weatherData.currentTime).toLocaleDateString("en-US", {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long',
-        })
-        }}
-        {{ weatherData?.currentTime && new Date(weatherData.currentTime).toLocaleTimeString("en-US", {
-          timeStyle: "short",
-        })
-        }}
+        {{ weatherData?.currentTime && formatFullDate(Number(weatherData.currentTime)) }}
+        {{ weatherData?.currentTime && formatShortTime(Number(weatherData.currentTime)) }}
       </p>
-      <p class="text-8xl mb-8">{{ typeof (weatherData?.current.temp) === 'number' ?
-        `${Math.round(weatherData?.current.temp)}°` : '--' }}</p>
+      <p class="text-8xl mb-8">{{ formatTemperature(weatherData?.current.temp) }}</p>
       <div class="text-center">
-        <p>Feels like {{ typeof (weatherData?.current.feels_like) === 'number' ?
-          `${Math.round(weatherData?.current.feels_like)}°` : '--' }}</p>
+        <p>Feels like {{ formatTemperature(weatherData?.current.feels_like) }}</p>
         <p class="capitalize">{{ weatherData?.current.weather[0]?.description }}</p>
       </div>
       <img :src="`https://openweathermap.org/img/wn/${weatherData?.current.weather[0]?.icon}@4x.png`"
@@ -77,14 +68,11 @@ console.log(weatherData);
         <div class="flex gap-10 overflow-x-scroll">
           <div v-for="hour in weatherData?.hourly" :key="hour.dt" class="min-w-12 flex flex-col gap-4 items-center">
             <p class="whitespace-nowrap text-md">
-              {{ hour.currentTime && new Date(hour.currentTime).toLocaleTimeString("en-US", {
-                hour: "numeric"
-              }) }}
+              {{ hour.currentTime && formatHour(hour.currentTime) }}
             </p>
             <img :src="`https://openweathermap.org/img/wn/${hour.weather[0]?.icon}@2x.png`"
               :alt="hour.weather[0]?.description" class="w-12 h-12" />
-            <p class="text-xl">{{ typeof (hour.temp) === 'number' ?
-              `${Math.round(hour.temp)}°` : '--' }}</p>
+            <p class="text-xl">{{ formatTemperature(hour.temp) }}</p>
           </div>
         </div>
       </div>
@@ -98,22 +86,15 @@ console.log(weatherData);
         <h2 class="mb-4">7-Day Forecast</h2>
         <div v-for="day in weatherData?.daily" :key="day.dt" class="min-w-12 flex gap-4 items-center justify-between">
           <p class="flex-1">
-            {{ new Date(day.dt * 1000).toLocaleDateString(
-              "en-US",
-              {
-                weekday: "long",
-              }
-            ) }}
+            {{ formatFullDate(day.dt * 1000) }}
           </p>
           <img :src="`https://openweathermap.org/img/wn/${day.weather[0]?.icon}@2x.png`"
             :alt="day.weather[0]?.description" class="w-12 h-12 object-cover" />
           <!-- <p class="text-xl">{{ typeof (day.temp.max) === 'number' ?
             `${Math.round(day.temp.max)}°` : '--' }}</p> -->
           <div class="flex gap-2 justify-end flex-1 text-md">
-            <p>H: {{ typeof (day.temp.max) === 'number' ?
-              `${Math.round(day.temp.max)}°` : '--' }}</p>
-            <p>L: {{ typeof (day.temp.min) === 'number' ?
-              `${Math.round(day.temp.min)}°` : '--' }}</p>
+            <p>H: {{ formatTemperature(day.temp.max) }}</p>
+            <p>L: {{ formatTemperature(day.temp.min) }}</p>
           </div>
         </div>
       </div>
