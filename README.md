@@ -1,4 +1,4 @@
-# vue-weather
+# Vuether
 
 A Vue 3 weather application built with TypeScript and Vite.
 
