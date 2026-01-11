@@ -56,6 +56,6 @@ const goToCityView = (chosenCity: SavedCity) => {
   </div>
 
   <p v-if="savedCities.length === 0" class="text-white py-4 text-xl mt-10">
-    No locations added. To start tracking a location, search in the field above.
+    {{ $t('noLocationsAdded') }}
   </p>
 </template>

@@ -51,15 +51,15 @@ const handleSelectResult = (result: MapboxFeature) => {
 <template>
   <main class="container text-white">
     <div class="relative pt-4 mb-8">
-      <input type="text" v-model="searchQuery" @input="getSearchResults" placeholder="Search for a city or state"
+      <input type="text" v-model="searchQuery" @input="getSearchResults" :placeholder="$t('search.placeholder')"
         class="py-2 px-1 w-full bg-transparent border-b focus:border-weather-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71]" />
       <ul v-if="searchQuery !== ''"
         class="absolute bg-weather-secondary text-white w-full shadow-md py-2 px-1 top-[66px]">
         <p v-if="searchError" class="text-red-500 p-2">
-          Sorry, something went wrong. Please try again.
+          {{ $t('search.error') }}
         </p>
         <p v-if="!searchError && mapboxSearchResults.length === 0" class="p-2">
-          No results match for your search.
+          {{ $t('search.noResults') }}
         </p>
         <template v-else>
           <li v-for="result in mapboxSearchResults" :key="result.id" class="p-2 cursor-pointer"

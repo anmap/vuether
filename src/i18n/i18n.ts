@@ -14,9 +14,11 @@ const i18n = createI18n({
       close: 'Close',
 
       // Search
-      searchPlaceholder: 'Search for a city or state',
-      searchError: 'Sorry, something went wrong. Please try again.',
-      searchNoResults: 'No results match for your search.',
+      search: {
+        placeholder: 'Search for a city or state',
+        error: 'Sorry, something went wrong. Please try again.',
+        noResults: 'No results match for your search.',
+      },
 
       // Empty states
       noLocationsAdded: 'No locations added. To start tracking a location, search in the field above.',
@@ -34,16 +36,19 @@ const i18n = createI18n({
       },
 
       // City view
-      previewBanner: 'You are currently previewing this city, click the {icon} button to start tracking it.',
-      feelsLike: 'Feels like',
-      hourlyWeather: 'Hourly Weather',
-      sevenDayForecast: '7-Day Forecast',
-      high: 'H:',
-      low: 'L:',
-      removeCity: 'Remove City',
+      cityView: {
+        previewBanner: 'button to start tracking it.',
+        previewBannerPrefix: 'You are currently previewing this city, click the',
+        feelsLike: 'Feels like',
+        hourlyWeather: 'Hourly Weather',
+        sevenDayForecast: '7-Day Forecast',
+        high: 'H:',
+        low: 'L:',
+        removeCity: 'Remove City',
+      },
 
       // Document title
-      documentTitle: 'Vuether',
+      documentTitle: 'VueWeather',
     },
   },
 });

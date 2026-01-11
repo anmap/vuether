@@ -16,8 +16,8 @@ defineProps<{
     <div class="flex flex-col gap-2">
       <p class="text-3xl self-end">{{ formatTemperature(city.weather?.current.temp) }}</p>
       <div class="flex gap-2">
-        <span class="text-xs">H: {{ formatTemperature(city.weather?.daily[0]?.temp.max) }}</span>
-        <span class="text-xs">L: {{ formatTemperature(city.weather?.daily[0]?.temp.min) }}</span>
+        <span class="text-xs">{{ $t('cityView.high') }} {{ formatTemperature(city.weather?.daily[0]?.temp.max) }}</span>
+        <span class="text-xs">{{ $t('cityView.low') }} {{ formatTemperature(city.weather?.daily[0]?.temp.min) }}</span>
       </div>
     </div>
   </div>

@@ -22,8 +22,8 @@ defineEmits<{
               <slot />
             </div>
             <div class="">
-              <button class="text-white bg-weather-primary py-2 px-6 cursor-pointer"
-                @click="$emit('close-modal')">Close</button>
+              <button class="text-white bg-weather-primary py-2 px-6 cursor-pointer" @click="$emit('close-modal')">{{
+                $t('close') }}</button>
             </div>
           </div>
         </Transition>

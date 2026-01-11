@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import CityView from '../views/CityView.vue'
+import i18n from '../i18n/i18n'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,7 +11,7 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       meta: {
-        title: 'Home',
+        titleKey: 'home',
       },
     },
     {
@@ -18,15 +19,17 @@ const router = createRouter({
       name: 'city',
       component: CityView,
       meta: {
-        title: 'Weather',
+        titleKey: 'weather',
       },
     },
   ],
 })
 
 router.beforeEach((to, _from, next) => {
-  const title = to.params.city ? `${to.params.city}, ${to.params.state}` : to.meta.title;
-  document.title = `${title} | VueWeather`;
+  const title = to.params.city 
+    ? `${to.params.city}, ${to.params.state}` 
+    : i18n.global.t(to.meta.titleKey as string || 'home');
+  document.title = `${title} | ${i18n.global.t('documentTitle')}`;
   next();
 });
 
