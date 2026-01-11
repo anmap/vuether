@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AsyncCityView from '@/components/AsyncCityView.vue';
+import CityViewSkeletion from '@/components/CityViewSkeletion.vue';
 </script>
 
 <template>
@@ -7,7 +8,7 @@ import AsyncCityView from '@/components/AsyncCityView.vue';
     <Suspense>
       <AsyncCityView />
       <template #fallback>
-        <div class="text-white text-2xl font-bold text-center">Loading...</div>
+        <CityViewSkeletion />
       </template>
     </Suspense>
   </div>

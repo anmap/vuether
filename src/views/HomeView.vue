@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { MapboxFeature } from '@/types/mapbox';
 import CityList from '@/components/CityList.vue';
+import CityCardSkeleton from '@/components/CityCardSkeleton.vue';
 
 const apiKey = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
 
@@ -72,7 +73,9 @@ const handleSelectResult = (result: MapboxFeature) => {
       <Suspense>
         <CityList />
         <template #fallback>
-          <div class="text-white text-2xl font-bold text-center">Loading...</div>
+          <div class="text-white text-2xl font-bold text-center">
+            <CityCardSkeleton />
+          </div>
         </template>
       </Suspense>
     </div>
