@@ -1,6 +1,11 @@
 # vue-weather
 
-This template should help get you started developing with Vue 3 in Vite.
+A Vue 3 weather application built with TypeScript and Vite.
+
+This project follows the tutorial at [Vue 3 Weather App Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9hfoy8vFQ5tbXO3vY0xhhUZ), with the following differences:
+
+- Written in **TypeScript** instead of JavaScript
+- Uses newer API versions of **MapBox** and **OpenWeatherMap**
 
 ## Recommended IDE Setup
 
@@ -22,6 +27,20 @@ TypeScript cannot handle type information for `.vue` imports by default, so we r
 ## Customize configuration
 
 See [Vite Configuration Reference](https://vite.dev/config/).
+
+## Environment Setup
+
+Before running the project, you must create a `.env` file in the root directory with the following environment variables:
+
+```env
+VITE_MAPBOX_ACCESS_TOKEN=your_mapbox_access_token_here
+VITE_OPENWEATHERMAP_API_KEY=your_openweathermap_api_key_here
+```
+
+Replace the placeholder values with your actual API keys:
+
+- Get your MapBox access token from [MapBox Account](https://account.mapbox.com/)
+- Get your OpenWeatherMap API key from [OpenWeatherMap](https://openweathermap.org/api)
 
 ## Project Setup
 
