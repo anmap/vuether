@@ -1,11 +1,44 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import BaseModal from './BaseModal.vue';
+import { uid } from 'uid';
+import type { SavedCity } from '@/types/savedCity';
+
+const route = useRoute();
+const router = useRouter();
 
 const modelActive = ref(false);
 const toggleModal = () => {
   modelActive.value = !modelActive.value;
+}
+
+const savedCities = ref<SavedCity[]>([]);
+const addCity = () => {
+  if (localStorage.getItem('savedCities')) {
+    try {
+      const raw = localStorage.getItem('savedCities');
+      savedCities.value = raw ? JSON.parse(raw) as SavedCity[] : [];
+    } catch (e) {
+      console.error('Failed to parse savedCities from localStorage', e);
+      savedCities.value = [];
+    }
+  }
+
+  savedCities.value.push({
+    id: uid(),
+    state: route.params.state,
+    city: route.params.city,
+    coords: {
+      lat: route.query.lat,
+      lng: route.query.lng,
+    },
+  });
+  localStorage.setItem('savedCities', JSON.stringify(savedCities.value));
+
+  const query = Object.assign({}, route.query);
+  delete query.preview;
+  router.replace({ query });
 }
 </script>
 
@@ -22,7 +55,8 @@ const toggleModal = () => {
       <div class="flex gap-3 flex-1 justify-end items-center">
         <i class="fa-solid fa-question-circle text-xl hover:text-weather-secondary duration-150 cursor-pointer block"
           @click="toggleModal"></i>
-        <i class="fa-solid fa-plus text-xl hover:text-weather-secondary duration-150 cursor-pointer block"></i>
+        <i class="fa-solid fa-plus text-xl hover:text-weather-secondary duration-150 cursor-pointer block"
+          @click="addCity" v-if="route.query.preview"></i>
       </div>
 
       <BaseModal :modelActive="modelActive" @close-modal="toggleModal">
