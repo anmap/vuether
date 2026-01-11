@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { MapboxFeature } from '@/types/mapbox';
+import CityList from '@/components/CityList.vue';
 
 const apiKey = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
 
@@ -66,6 +67,14 @@ const handleSelectResult = (result: MapboxFeature) => {
           </li>
         </template>
       </ul>
+    </div>
+    <div class="flex flex-col gap-4">
+      <Suspense>
+        <CityList />
+        <template #fallback>
+          <div class="text-white text-2xl font-bold text-center">Loading...</div>
+        </template>
+      </Suspense>
     </div>
   </main>
 </template>

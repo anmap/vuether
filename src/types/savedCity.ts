@@ -1,4 +1,5 @@
 import type { LocationQueryValue } from 'vue-router';
+import type { OpenWeatherMapResult } from './openweathermap';
 
 export interface SavedCity {
   id: string;
@@ -8,4 +9,5 @@ export interface SavedCity {
     lat: LocationQueryValue | LocationQueryValue[] | undefined;
     lng: LocationQueryValue | LocationQueryValue[] | undefined;
   };
+  weather?: OpenWeatherMapResult;
 }
