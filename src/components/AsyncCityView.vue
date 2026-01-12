@@ -10,7 +10,15 @@ import { useI18n } from 'vue-i18n';
 const apiKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY as string;
 
 const route = useRoute();
-const { locale } = useI18n();
+const { locale, t } = useI18n();
+
+const translateWeatherDescription = (description: string | undefined): string => {
+  if (!description) return '';
+  const key = `weatherConditions.${description}`;
+  const translation = t(key);
+  // If translation doesn't exist (returns the key), fallback to original description
+  return translation !== key ? translation : description;
+};
 
 const getWeatherData = async () => {
   try {
@@ -63,10 +71,10 @@ const removeCity = () => {
       <p class="text-8xl mb-8">{{ formatTemperature(weatherData?.current.temp) }}</p>
       <div class="text-center">
         <p>{{ $t('cityView.feelsLike') }} {{ formatTemperature(weatherData?.current.feels_like) }}</p>
-        <p class="capitalize">{{ weatherData?.current.weather[0]?.description }}</p>
+        <p>{{ translateWeatherDescription(weatherData?.current.weather[0]?.description) }}</p>
       </div>
       <img :src="`https://openweathermap.org/img/wn/${weatherData?.current.weather[0]?.icon}@4x.png`"
-        :alt="weatherData?.current.weather[0]?.description" class="w-32 mb-8" />
+        :alt="translateWeatherDescription(weatherData?.current.weather[0]?.description)" class="w-32 mb-8" />
     </div>
 
     <hr class="border-white border-opacity-10 border w-full" />
@@ -81,7 +89,7 @@ const removeCity = () => {
               {{ hour.currentTime && formatHour(hour.currentTime, locale) }}
             </p>
             <img :src="`https://openweathermap.org/img/wn/${hour.weather[0]?.icon}@2x.png`"
-              :alt="hour.weather[0]?.description" class="w-12 h-12" />
+              :alt="translateWeatherDescription(hour.weather[0]?.description)" class="w-12 h-12" />
             <p class="text-xl">{{ formatTemperature(hour.temp) }}</p>
           </div>
         </div>
@@ -99,7 +107,7 @@ const removeCity = () => {
             {{ formatFullDate(day.dt * 1000, locale) }}
           </p>
           <img :src="`https://openweathermap.org/img/wn/${day.weather[0]?.icon}@2x.png`"
-            :alt="day.weather[0]?.description" class="w-12 h-12 object-cover" />
+            :alt="translateWeatherDescription(day.weather[0]?.description)" class="w-12 h-12 object-cover" />
           <div class="flex gap-2 justify-end flex-1 text-md">
             <p>{{ $t('cityView.high') }} {{ formatTemperature(day.temp.max) }}</p>
             <p>{{ $t('cityView.low') }} {{ formatTemperature(day.temp.min) }}</p>
