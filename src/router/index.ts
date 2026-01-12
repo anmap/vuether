@@ -26,9 +26,9 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _from, next) => {
-  const title = to.params.city 
-    ? `${to.params.city}, ${to.params.state}` 
-    : i18n.global.t(to.meta.titleKey as string || 'home');
+  const title = to.params.city
+    ? `${to.params.city}, ${to.params.state}`
+    : i18n.global.t(to.meta.titleKey as string);
   document.title = `${title} | ${i18n.global.t('documentTitle')}`;
   next();
 });

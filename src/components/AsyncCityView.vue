@@ -5,10 +5,12 @@ import { useRoute, useRouter } from 'vue-router';
 import { timestampToDate, formatFullDate, formatShortTime, formatHour } from '@/utils/datetime';
 import { formatTemperature } from '@/utils/temperature';
 import type { SavedCity } from '@/types/savedCity';
+import { useI18n } from 'vue-i18n';
 
 const apiKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY as string;
 
 const route = useRoute();
+const { locale } = useI18n();
 
 const getWeatherData = async () => {
   try {
@@ -55,8 +57,8 @@ const removeCity = () => {
     <div class="flex flex-col items-center text-white py-12">
       <h1 class="text-4xl mb-2">{{ route.params.city }}</h1>
       <p class="text-sm mb-12">
-        {{ weatherData?.currentTime && formatFullDate(Number(weatherData.currentTime)) }}
-        {{ weatherData?.currentTime && formatShortTime(Number(weatherData.currentTime)) }}
+        {{ weatherData?.currentTime && formatFullDate(Number(weatherData.currentTime), locale) }}
+        {{ weatherData?.currentTime && formatShortTime(Number(weatherData.currentTime), locale) }}
       </p>
       <p class="text-8xl mb-8">{{ formatTemperature(weatherData?.current.temp) }}</p>
       <div class="text-center">
@@ -76,7 +78,7 @@ const removeCity = () => {
         <div class="flex gap-10 overflow-x-scroll">
           <div v-for="hour in weatherData?.hourly" :key="hour.dt" class="min-w-12 flex flex-col gap-4 items-center">
             <p class="whitespace-nowrap text-md">
-              {{ hour.currentTime && formatHour(hour.currentTime) }}
+              {{ hour.currentTime && formatHour(hour.currentTime, locale) }}
             </p>
             <img :src="`https://openweathermap.org/img/wn/${hour.weather[0]?.icon}@2x.png`"
               :alt="hour.weather[0]?.description" class="w-12 h-12" />
@@ -94,12 +96,10 @@ const removeCity = () => {
         <h2 class="mb-4 font-bold uppercase">{{ $t('cityView.sevenDayForecast') }}</h2>
         <div v-for="day in weatherData?.daily" :key="day.dt" class="min-w-12 flex gap-4 items-center justify-between">
           <p class="flex-1">
-            {{ formatFullDate(day.dt * 1000) }}
+            {{ formatFullDate(day.dt * 1000, locale) }}
           </p>
           <img :src="`https://openweathermap.org/img/wn/${day.weather[0]?.icon}@2x.png`"
             :alt="day.weather[0]?.description" class="w-12 h-12 object-cover" />
-          <!-- <p class="text-xl">{{ typeof (day.temp.max) === 'number' ?
-            `${Math.round(day.temp.max)}°` : '--' }}</p> -->
           <div class="flex gap-2 justify-end flex-1 text-md">
             <p>{{ $t('cityView.high') }} {{ formatTemperature(day.temp.max) }}</p>
             <p>{{ $t('cityView.low') }} {{ formatTemperature(day.temp.min) }}</p>

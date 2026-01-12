@@ -3,7 +3,7 @@ export default {
   appName: 'Vuether',
 
   // Navigation
-  home: 'Koti',
+  home: 'Etusivu',
   weather: 'Sää',
   close: 'Sulje',
 
