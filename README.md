@@ -1,11 +1,12 @@
 # Vuether
 
-A Vue 3 weather application built with TypeScript and Vite.
+A Vue 3 weather application built with TypeScript and Vite, for learning purposes.
 
 This project follows the tutorial at [Vue 3 Weather App Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9hfoy8vFQ5tbXO3vY0xhhUZ), with the following differences:
 
 - Written in **TypeScript** instead of JavaScript
 - Uses newer API versions of **MapBox** and **OpenWeatherMap**
+- Includes **internationalization (i18n)** support using `vue-i18n`, with English and Finnish translations for all user-facing text and weather condition descriptions
 
 ## Recommended IDE Setup
 
