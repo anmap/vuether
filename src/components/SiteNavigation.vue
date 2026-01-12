@@ -4,9 +4,11 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 import BaseModal from './BaseModal.vue';
 import { uid } from 'uid';
 import type { SavedCity } from '@/types/savedCity';
+import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
 const router = useRouter();
+const { locale } = useI18n();
 
 const modelActive = ref(false);
 const toggleModal = () => {
@@ -14,6 +16,12 @@ const toggleModal = () => {
 }
 
 const savedCities = ref<SavedCity[]>([]);
+
+const availableLanguages = [
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'fi', name: 'Suomi', flag: '🇫🇮' },
+];
+
 const addCity = () => {
   if (localStorage.getItem('savedCities')) {
     try {
@@ -43,6 +51,11 @@ const addCity = () => {
   query.id = cityObj.id;
   router.replace({ query });
 }
+
+const changeLanguage = (event: Event) => {
+  const target = event.target as HTMLSelectElement;
+  locale.value = target.value;
+}
 </script>
 
 <template>
@@ -56,6 +69,20 @@ const addCity = () => {
       </RouterLink>
 
       <div class="flex gap-3 flex-1 justify-end items-center">
+        <div
+          class="flex items-center gap-1 px-2 py-1 border border-white/30 rounded hover:bg-white/10 duration-150 cursor-pointer">
+          <select v-model="locale"
+            class="bg-transparent text-white border-none outline-none cursor-pointer text-sm appearance-none pr-4"
+            @change="changeLanguage">
+            <option v-for="lang in availableLanguages" :key="lang.code" :value="lang.code"
+              class="bg-weather-primary text-white">
+              <div class="flex items-center gap-2">
+                {{ lang.flag }}&nbsp;&nbsp;{{ lang.name }}
+              </div>
+            </option>
+          </select>
+          <i class="fa-solid fa-chevron-down text-lg"></i>
+        </div>
         <i class="fa-solid fa-question-circle text-xl hover:text-weather-secondary duration-150 cursor-pointer block"
           @click="toggleModal"></i>
         <i class="fa-solid fa-plus text-xl hover:text-weather-secondary duration-150 cursor-pointer block"
